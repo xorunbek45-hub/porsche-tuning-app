@@ -1,0 +1,11 @@
+Model Information:
+* title:	Porsche 918 Free
+* source:	https://sketchfab.com/3d-models/porsche-918-free-ec8eebcdbf534bbba151375b9992f6d7
+* author:	Black Snow (https://sketchfab.com/BlackSnow02)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Porsche 918 Free" (https://sketchfab.com/3d-models/porsche-918-free-ec8eebcdbf534bbba151375b9992f6d7) by Black Snow (https://sketchfab.com/BlackSnow02) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
