@@ -31,6 +31,12 @@ export function Scene({ tuningConfig, activeModel }) {
           spoilerType={tuningConfig.spoiler}
           trimType={tuningConfig.trim}
           carbonType={tuningConfig.carbon}
+          aeroType={tuningConfig.aero}
+          decalType={tuningConfig.decals}
+          badgeType={tuningConfig.badges}
+          mirrorType={tuningConfig.mirrors}
+          metalType={tuningConfig.metal}
+          tireType={tuningConfig.tires}
           caliperType={tuningConfig.caliper}
           glassType={tuningConfig.glass}
           lightType={tuningConfig.lights}

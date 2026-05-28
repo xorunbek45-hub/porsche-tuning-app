@@ -26,8 +26,9 @@ const COLORS = [
 ]
 
 const MODELS = [
-  { id: 'porsche_911_gt3', name: 'Porsche 911 GT3 (2022)' },
   { id: 'free_1975_porsche_911_930_turbo', name: 'Porsche 911 930 Turbo (1975)' },
+  { id: 'porsche_911_turbo_996', name: 'Porsche 911 Turbo 996 (2000)' },
+  { id: 'porsche_911_gt3', name: 'Porsche 911 GT3 (2022)' },
   { id: 'free_porsche_911_carrera_4s', name: 'Porsche 911 Carrera 4S' },
   { id: 'porsche_918_free', name: 'Porsche 918 Spyder' },
   { id: '2022_porsche_cayenne_turbo_gt', name: 'Porsche Cayenne Turbo GT' },
@@ -41,6 +42,7 @@ const OPTION_GROUPS = [
       { value: 'gloss', label: 'Gloss' },
       { value: 'satin', label: 'Satin' },
       { value: 'matte', label: 'Matte' },
+      { value: 'pearl', label: 'Pearl' },
       { value: 'chrome', label: 'Chrome' },
     ],
   },
@@ -53,6 +55,7 @@ const OPTION_GROUPS = [
       { value: 'gold', label: 'Neodyme' },
       { value: 'bronze', label: 'Bronze' },
       { value: 'white', label: 'White' },
+      { value: 'blackChrome', label: 'Black Chrome' },
     ],
   },
   {
@@ -83,6 +86,55 @@ const OPTION_GROUPS = [
     ],
   },
   {
+    title: 'Aero Kit',
+    key: 'aero',
+    options: [
+      { value: 'carbon', label: 'Carbon Aero' },
+      { value: 'black', label: 'Gloss Black' },
+      { value: 'body', label: 'Body Color' },
+      { value: 'factory', label: 'Factory' },
+    ],
+  },
+  {
+    title: 'Decals',
+    key: 'decals',
+    options: [
+      { value: 'factory', label: 'Factory' },
+      { value: 'black', label: 'Black Script' },
+      { value: 'white', label: 'White Script' },
+      { value: 'red', label: 'Red Script' },
+      { value: 'delete', label: 'Delete' },
+    ],
+  },
+  {
+    title: 'Badges',
+    key: 'badges',
+    options: [
+      { value: 'chrome', label: 'Chrome' },
+      { value: 'black', label: 'Black' },
+      { value: 'gold', label: 'Gold' },
+    ],
+  },
+  {
+    title: 'Mirror Caps',
+    key: 'mirrors',
+    options: [
+      { value: 'body', label: 'Body Color' },
+      { value: 'black', label: 'Gloss Black' },
+      { value: 'carbon', label: 'Carbon' },
+    ],
+  },
+  {
+    title: 'Metal Accents',
+    key: 'metal',
+    options: [
+      { value: 'chrome', label: 'Chrome' },
+      { value: 'black', label: 'Black' },
+      { value: 'bronze', label: 'Bronze' },
+      { value: 'titanium', label: 'Titanium' },
+    ],
+  },
+  {
     title: 'Brake Calipers',
     key: 'caliper',
     options: [
@@ -94,11 +146,22 @@ const OPTION_GROUPS = [
     ],
   },
   {
+    title: 'Tires',
+    key: 'tires',
+    options: [
+      { value: 'factory', label: 'Factory' },
+      { value: 'deepBlack', label: 'Deep Black' },
+      { value: 'track', label: 'Track Rubber' },
+      { value: 'whiteLetter', label: 'White Letter' },
+    ],
+  },
+  {
     title: 'Window Tint',
     key: 'glass',
     options: [
       { value: 'clear', label: 'Clear' },
       { value: 'tinted', label: 'Privacy Tint' },
+      { value: 'blue', label: 'Blue Tint' },
     ],
   },
   {
@@ -108,6 +171,7 @@ const OPTION_GROUPS = [
       { value: 'clear', label: 'Clear' },
       { value: 'smoked', label: 'Smoked' },
       { value: 'yellow', label: 'Yellow Lens' },
+      { value: 'ice', label: 'Ice LED' },
     ],
   },
   {

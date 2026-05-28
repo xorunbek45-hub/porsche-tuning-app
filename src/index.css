@@ -46,6 +46,11 @@ body, html {
   position: relative;
 }
 
+.scene-layer {
+  position: absolute;
+  inset: 0;
+}
+
 /* UI Overlay */
 .ui-layer {
   position: absolute;
@@ -213,23 +218,96 @@ body, html {
 }
 
 @media (max-width: 760px) {
+  body,
+  html {
+    overflow: hidden;
+  }
+
+  .scene-layer {
+    inset: 0 0 44vh 0;
+  }
+
   .ui-layer {
     padding: 20px 16px;
+    justify-content: flex-start;
+    gap: 14px;
   }
 
   .brand-wordmark {
     transform: scaleX(1.08);
-    font-size: 2rem;
+    font-size: clamp(1.75rem, 10vw, 2.55rem);
   }
 
   .ui-header p {
-    font-size: 0.94rem;
+    font-size: 0.88rem;
   }
 
   .tuning-menu {
-    align-self: center;
-    max-height: 46vh;
+    position: absolute;
+    left: 12px;
+    right: auto;
+    bottom: 12px;
+    width: min(360px, calc(100vw - 24px));
+    max-width: none;
+    max-height: 43vh;
+    align-self: stretch;
+    gap: 14px;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 -10px 42px rgba(20, 24, 30, 0.16);
   }
+
+  .tuning-section h3 {
+    font-size: 0.78rem;
+    margin-bottom: 8px;
+  }
+
+  .model-select {
+    padding: 10px;
+    font-size: 0.84rem;
+  }
+
+  .color-picker {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(27px, 27px));
+    gap: 6px;
+  }
+
+  .color-btn {
+    width: 27px;
+    height: 27px;
+  }
+
+  .parts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .part-btn {
+    min-height: 38px;
+    padding: 8px 7px;
+    font-size: 0.76rem;
+    line-height: 1.15;
+  }
+}
+
+@media (max-width: 430px) {
+  .scene-layer {
+    inset: 0 0 48vh 0;
+  }
+
+  .ui-layer {
+    padding: 16px 12px;
+  }
+
+  .tuning-menu {
+    left: 8px;
+    right: auto;
+    bottom: 8px;
+    width: min(360px, calc(100vw - 16px));
+    max-height: 47vh;
+  }
+
 }
 
 /* Custom Scrollbar for Tuning Menu */

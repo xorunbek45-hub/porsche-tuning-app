@@ -5,13 +5,19 @@ import { TuningMenu } from './components/TuningMenu'
 
 function App() {
   const [tuningConfig, setTuningConfig] = useState({
-    model: 'porsche_911_gt3',
+    model: 'free_1975_porsche_911_930_turbo',
     color: '#d6001c',
     paintFinish: 'gloss',
     rims: 'silver',
     spoiler: 'body',
     trim: 'carbon',
     carbon: 'visible',
+    aero: 'carbon',
+    decals: 'factory',
+    badges: 'chrome',
+    mirrors: 'body',
+    metal: 'chrome',
+    tires: 'factory',
     caliper: 'red',
     glass: 'clear',
     lights: 'clear',
@@ -23,7 +29,9 @@ function App() {
   return (
     <div className="app-container">
       {/* 3D Scene Layer */}
-      <Scene tuningConfig={tuningConfig} activeModel={tuningConfig.model} />
+      <div className="scene-layer">
+        <Scene tuningConfig={tuningConfig} activeModel={tuningConfig.model} />
+      </div>
 
       {/* UI Layer */}
       <div className="ui-layer">
