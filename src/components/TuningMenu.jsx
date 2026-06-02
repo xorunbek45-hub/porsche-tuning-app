@@ -157,25 +157,6 @@ const OPTION_GROUPS = [
     ],
   },
   {
-    title: 'Window Tint',
-    key: 'glass',
-    options: [
-      { value: 'clear', label: 'Clear' },
-      { value: 'tinted', label: 'Privacy Tint' },
-      { value: 'blue', label: 'Blue Tint' },
-    ],
-  },
-  {
-    title: 'Lights',
-    key: 'lights',
-    options: [
-      { value: 'clear', label: 'Clear' },
-      { value: 'smoked', label: 'Smoked' },
-      { value: 'yellow', label: 'Yellow Lens' },
-      { value: 'ice', label: 'Ice LED' },
-    ],
-  },
-  {
     title: 'Interior',
     key: 'interior',
     options: [

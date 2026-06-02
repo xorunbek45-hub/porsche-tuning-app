@@ -1,6 +1,7 @@
 import { useLayoutEffect, useMemo } from 'react'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
 const MODEL_TARGET_SIZE = 4.65
 const BASE_URL = import.meta.env.BASE_URL || '/'
@@ -152,9 +153,13 @@ function prepareScene(scene) {
       : cloneMaterial(child.material)
 
     child.castShadow = false
-    child.receiveShadow = true
-    child.frustumCulled = false
+    child.receiveShadow = false
+    child.frustumCulled = true
+    child.matrixAutoUpdate = false
+    child.updateMatrix()
   })
+
+  mergePerformanceMeshes(prepared)
 
   return prepared
 }
@@ -209,7 +214,7 @@ function isAeroPart(text) {
 }
 
 function isDecalPart(text) {
-  return includesAny(text, ['sticker', 'decal', 'stripe', 'doorline', 'turbo', 'support_logo', 'side_windo_logo'])
+  return includesAny(text, ['sticker', 'decal', 'stripe', 'doorline', 'turbo'])
 }
 
 function isBadgePart(text) {
@@ -218,7 +223,7 @@ function isBadgePart(text) {
 }
 
 function isMirrorPart(text) {
-  return includesAny(text, ['mirror', 'side_mirrors'])
+  return includesAny(text, ['mirror_cap', 'mirrorcap', 'side_mirrors'])
 }
 
 function isMetalPart(text) {
@@ -230,6 +235,67 @@ function isMetalPart(text) {
 
 function isTirePart(text) {
   return includesAny(text, ['tire', 'tyre', 'rubber'])
+}
+
+function mergePerformanceMeshes(root) {
+  const groups = new Map()
+
+  root.updateMatrixWorld(true)
+  root.traverse((child) => {
+    if (!child.isMesh || !child.geometry || !child.material || Array.isArray(child.material)) return
+
+    const text = getPartText(child, child.material)
+    const role = isRimPart(text) ? 'rim' : isCaliperPart(text) ? 'caliper' : null
+    if (!role) return
+
+    const key = `${role}:${child.material.name || 'material'}`
+    if (!groups.has(key)) {
+      groups.set(key, {
+        role,
+        materialName: child.material.name || role,
+        material: child.material,
+        items: [],
+      })
+    }
+
+    const geometry = child.geometry.clone()
+    child.updateWorldMatrix(true, false)
+    geometry.applyMatrix4(child.matrixWorld)
+    groups.get(key).items.push({ child, geometry })
+  })
+
+  groups.forEach((group) => {
+    if (group.items.length < 3) {
+      group.items.forEach(({ geometry }) => geometry.dispose())
+      return
+    }
+
+    const geometries = group.items.map(({ geometry }) => geometry)
+    let mergedGeometry
+
+    try {
+      mergedGeometry = mergeGeometries(geometries, false)
+    } catch {
+      mergedGeometry = undefined
+    }
+
+    geometries.forEach((geometry) => geometry.dispose())
+    if (!mergedGeometry) return
+
+    group.items.forEach(({ child }) => {
+      child.parent?.remove(child)
+    })
+
+    const mergedMesh = new THREE.Mesh(mergedGeometry, group.material)
+    mergedMesh.name = `Merged_${group.role}_${group.materialName}`
+    mergedMesh.userData.tuningBase = { visible: true }
+    mergedMesh.castShadow = false
+    mergedMesh.receiveShadow = false
+    mergedMesh.frustumCulled = true
+    mergedMesh.matrixAutoUpdate = false
+    mergedMesh.updateMatrix()
+    root.add(mergedMesh)
+  })
 }
 
 export function CarModel({
@@ -247,11 +313,10 @@ export function CarModel({
   metalType = 'chrome',
   tireType = 'factory',
   caliperType = 'red',
-  glassType = 'clear',
-  lightType = 'clear',
   interiorType = 'black',
   exhaustType = 'chrome',
   suspensionType = 'stock',
+  targetSize = MODEL_TARGET_SIZE,
 }) {
   const { scene } = useGLTF(modelPath(modelId))
   const modelScene = useMemo(() => prepareScene(scene), [scene])
@@ -267,7 +332,7 @@ export function CarModel({
     const size = box.getSize(new THREE.Vector3())
     const center = box.getCenter(new THREE.Vector3())
     const maxDim = Math.max(size.x, size.y, size.z)
-    const scale = maxDim > 0 ? MODEL_TARGET_SIZE / maxDim : 1
+    const scale = maxDim > 0 ? targetSize / maxDim : 1
 
     modelScene.scale.setScalar(scale)
     modelScene.updateMatrixWorld(true)
@@ -281,7 +346,7 @@ export function CarModel({
       -center.z,
     )
     modelScene.updateMatrixWorld(true)
-  }, [modelScene, suspensionType])
+  }, [modelScene, suspensionType, targetSize])
 
   useLayoutEffect(() => {
     if (!modelScene) return
@@ -343,7 +408,7 @@ export function CarModel({
           }
         }
 
-        if (isMirrorPart(text)) {
+        if (isMirrorPart(text) && !isGlassPart(text) && !isLightPart(text)) {
           if (mirrorType === 'body') {
             applyMetal(material, color, PAINT_FINISHES[paintFinish] ?? PAINT_FINISHES.gloss)
           } else if (mirrorType === 'black') {
@@ -371,7 +436,7 @@ export function CarModel({
           applyMetal(material, metal.color, metal)
         }
 
-        if (isTrimPart(text) && !isCarbonPart(text)) {
+        if (isTrimPart(text) && !isCarbonPart(text) && !isPaintPart(text) && !isGlassPart(text) && !isLightPart(text)) {
           if (trimType === 'black') {
             applyMetal(material, '#090909', { metalness: 0.42, roughness: 0.28, clearcoat: 0.55 })
           } else if (trimType === 'body') {
@@ -387,27 +452,6 @@ export function CarModel({
             roughness: 0.25,
             clearcoat: 0.8,
           })
-        }
-
-        if (isGlassPart(text)) {
-          material.transparent = true
-          material.depthWrite = false
-          material.opacity = glassType === 'tinted' ? 0.68 : glassType === 'blue' ? 0.42 : 0.28
-          if (material.color) material.color.set(glassType === 'tinted' ? '#050505' : glassType === 'blue' ? '#8bb7df' : '#edf7ff')
-          material.metalness = 0
-          material.roughness = 0.04
-        }
-
-        if (isLightPart(text)) {
-          if (lightType === 'smoked') {
-            applyMetal(material, '#252525', { metalness: 0.15, roughness: 0.18 })
-            material.opacity = 0.82
-            material.transparent = true
-          } else if (lightType === 'yellow') {
-            applyMetal(material, '#ffd35a', { metalness: 0.05, roughness: 0.12 })
-          } else if (lightType === 'ice') {
-            applyMetal(material, '#dff5ff', { metalness: 0.02, roughness: 0.08 })
-          }
         }
 
         if (isInteriorPart(text)) {
@@ -440,8 +484,6 @@ export function CarModel({
     metalType,
     tireType,
     caliperType,
-    glassType,
-    lightType,
     interiorType,
     exhaustType,
     suspensionType,
@@ -451,9 +493,3 @@ export function CarModel({
 }
 
 useGLTF.preload(modelPath('free_1975_porsche_911_930_turbo'))
-useGLTF.preload(modelPath('porsche_cayman'))
-useGLTF.preload(modelPath('porsche_911'))
-useGLTF.preload(modelPath('free_porsche_911_carrera_4s'))
-useGLTF.preload(modelPath('porsche_carrera_gt_2004'))
-useGLTF.preload(modelPath('2022_porsche_cayenne_turbo_gt'))
-useGLTF.preload(modelPath('porsche_panamera_2017'))

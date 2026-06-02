@@ -19,8 +19,6 @@ function App() {
     metal: 'chrome',
     tires: 'factory',
     caliper: 'red',
-    glass: 'clear',
-    lights: 'clear',
     interior: 'black',
     exhaust: 'chrome',
     suspension: 'stock',

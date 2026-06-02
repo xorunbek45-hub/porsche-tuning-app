@@ -1,16 +1,21 @@
-import { Suspense } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Environment, ContactShadows } from '@react-three/drei'
+import { OrbitControls, Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei'
 import { CarModel } from './CarModel'
 
 export function Scene({ tuningConfig, activeModel }) {
+  const isMobile = useMediaQuery('(max-width: 760px)')
+  const cameraPosition = isMobile ? [5, 1.8, 5] : [4.35, 1.65, 4.35]
+  const cameraFov = isMobile ? 45 : 36
+  const controlsTarget = isMobile ? [0, 0.72, 0] : [0, 0.85, 0]
+
   return (
     <Canvas
-      camera={{ position: [4.35, 1.65, 4.35], fov: 36, near: 0.1, far: 100 }}
-      dpr={[0.75, 1.35]}
+      dpr={[0.65, 1]}
       frameloop="demand"
-      gl={{ antialias: true, powerPreference: 'high-performance' }}
+      gl={{ antialias: false, powerPreference: 'high-performance' }}
     >
+      <PerspectiveCamera makeDefault position={cameraPosition} fov={cameraFov} near={0.1} far={100} />
       <color attach="background" args={['#ffffff']} />
       
       {/* Lighting */}
@@ -38,11 +43,10 @@ export function Scene({ tuningConfig, activeModel }) {
           metalType={tuningConfig.metal}
           tireType={tuningConfig.tires}
           caliperType={tuningConfig.caliper}
-          glassType={tuningConfig.glass}
-          lightType={tuningConfig.lights}
           interiorType={tuningConfig.interior}
           exhaustType={tuningConfig.exhaust}
           suspensionType={tuningConfig.suspension}
+          targetSize={isMobile ? 4.3 : 4.65}
         />
       </Suspense>
 
@@ -52,12 +56,12 @@ export function Scene({ tuningConfig, activeModel }) {
       {/* Orbit Controls */}
       <OrbitControls 
         makeDefault 
-        target={[0, 0.85, 0]}
+        target={controlsTarget}
         minPolarAngle={0.15} 
         maxPolarAngle={Math.PI / 2.05} 
         enableZoom={true} 
-        minDistance={3.1} 
-        maxDistance={7.2} 
+        minDistance={isMobile ? 3.7 : 3.1} 
+        maxDistance={isMobile ? 8.6 : 7.2} 
         enablePan={false}
         enableDamping
         dampingFactor={0.08}
@@ -66,4 +70,22 @@ export function Scene({ tuningConfig, activeModel }) {
       />
     </Canvas>
   )
+}
+
+function useMediaQuery(query) {
+  const [matches, setMatches] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia(query).matches
+  })
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(query)
+    const updateMatches = () => setMatches(mediaQuery.matches)
+
+    updateMatches()
+    mediaQuery.addEventListener('change', updateMatches)
+    return () => mediaQuery.removeEventListener('change', updateMatches)
+  }, [query])
+
+  return matches
 }
