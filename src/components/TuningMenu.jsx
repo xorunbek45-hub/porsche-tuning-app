@@ -27,11 +27,12 @@ const COLORS = [
 
 const MODELS = [
   { id: 'free_1975_porsche_911_930_turbo', name: 'Porsche 911 930 Turbo (1975)' },
-  { id: 'porsche_911_turbo_996', name: 'Porsche 911 Turbo 996 (2000)' },
-  { id: 'porsche_911_gt3', name: 'Porsche 911 GT3 (2022)' },
+  { id: 'porsche_911', name: 'Porsche 911 Targa 4S (2021)' },
   { id: 'free_porsche_911_carrera_4s', name: 'Porsche 911 Carrera 4S' },
-  { id: 'porsche_918_free', name: 'Porsche 918 Spyder' },
+  { id: 'porsche_carrera_gt_2004', name: 'Porsche Carrera GT (2004)' },
+  { id: 'porsche_cayman', name: 'Porsche Cayman S 981 (2014)' },
   { id: '2022_porsche_cayenne_turbo_gt', name: 'Porsche Cayenne Turbo GT' },
+  { id: 'porsche_panamera_2017', name: 'Porsche Panamera (2017)' },
 ]
 
 const OPTION_GROUPS = [

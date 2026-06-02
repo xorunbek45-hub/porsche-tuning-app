@@ -173,7 +173,7 @@ function isRimPart(text) {
 }
 
 function isCaliperPart(text) {
-  return includesAny(text, ['caliper', 'calliper', 'calliperzone'])
+  return includesAny(text, ['caliper', 'calliper', 'calliperzone', 'calipe', 'callipe'])
 }
 
 function isGlassPart(text) {
@@ -189,7 +189,7 @@ function isInteriorPart(text) {
 }
 
 function isTrimPart(text) {
-  return includesAny(text, ['grille', 'grill', 'base', 'textured', 'plastic', 'radiator'])
+  return includesAny(text, ['grille', 'grill', 'grilla', 'gird', 'base', 'textured', 'plastic', 'radiator', 'plasti', 'negro'])
 }
 
 function isCarbonPart(text) {
@@ -222,7 +222,7 @@ function isMirrorPart(text) {
 }
 
 function isMetalPart(text) {
-  return includesAny(text, ['chrome', 'aluminium', 'aluminum', 'silver'])
+  return includesAny(text, ['chrome', 'aluminium', 'aluminum', 'silver', 'opaque_chromerough'])
     && !isRimPart(text)
     && !isLightPart(text)
     && !isGlassPart(text)
@@ -450,9 +450,10 @@ export function CarModel({
   return <primitive object={modelScene} />
 }
 
-useGLTF.preload(modelPath('porsche_911_gt3'))
 useGLTF.preload(modelPath('free_1975_porsche_911_930_turbo'))
-useGLTF.preload(modelPath('porsche_911_turbo_996'))
+useGLTF.preload(modelPath('porsche_cayman'))
+useGLTF.preload(modelPath('porsche_911'))
 useGLTF.preload(modelPath('free_porsche_911_carrera_4s'))
-useGLTF.preload(modelPath('porsche_918_free'))
+useGLTF.preload(modelPath('porsche_carrera_gt_2004'))
 useGLTF.preload(modelPath('2022_porsche_cayenne_turbo_gt'))
+useGLTF.preload(modelPath('porsche_panamera_2017'))
